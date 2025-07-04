@@ -336,6 +336,13 @@
           { name: "126网易免费邮", icon: "✉️", href: "https://mail.126.com/" },
           { name: "adonisjs.com", icon: "🛠️", href: "https://docs.adonisjs.com/" },
           {
+            name: "alamy",
+            icon: "🖼️",
+            href: "https://www.alamy.com",
+            search: "https://www.alamy.com/stock-photo/{}.html?sortBy=newest",
+            dialog: true
+          },
+          {
             name: "Alpine.js",
             icon: "⛰️",
             href: "https://alpinejs.dev/"
@@ -344,7 +351,7 @@
             name: "archlinux.org",
             icon: "🐧",
             href: "https://archlinux.org/packages/",
-            search: "https://archlinux.org/packages/?q=",
+            search: "https://archlinux.org/packages/?q={}",
             dialog: true
           },
           { name: "astro.build", icon: "🪐", href: "https://docs.astro.build/en/getting-started/" },
@@ -359,38 +366,53 @@
                 shortcut: "w",
                 icon: "🌐",
                 dialog: true,
-                search: "https://www.baidu.com/s?wd="
+                search: "https://www.baidu.com/s?wd={}"
               },
               {
                 name: "地图",
                 shortcut: "d",
                 icon: "🗺️",
                 dialog: true,
-                search: "https://map.baidu.com/search/@12610000,2630000?querytype=s&wd="
+                search: "https://map.baidu.com/search/@12610000,2630000?querytype=s&wd={}"
               }
             ]
           },
           { name: "deepseek.com", icon: "🧠", href: "https://chat.deepseek.com/" },
           { name: "dev.to", icon: "💻", href: "https://dev.to/" },
           {
+            name: "gitee",
+            icon: "👍",
+            href: "https://gitee.com/",
+            content: [
+              { name: "dashboard", icon: "📊", href: "https://gitee.com/dashboard" },
+              { name: "repositories", icon: "📁", href: "https://gitee.com/dashboard/projects" },
+              {
+                name: "search repositories",
+                icon: "🔍",
+                dialog: true,
+                search: "https://so.gitee.com/?q={}"
+              }
+            ]
+          },
+          {
             name: "github.com",
             icon: "🐙",
             href: "https://github.com/",
             content: [
               { name: "dashboard", icon: "📊", href: "https://github.com/dashboard" },
-              { name: "repositories", icon: "📁", href: "https://github.com/dev-chenxing?tab=repositories" },
-              { name: "stars", icon: "⭐", href: "https://github.com/dev-chenxing?tab=stars" },
+              { name: "repositories", icon: "📁", href: "https://github.com/chenxing-dev?tab=repositories" },
+              { name: "stars", icon: "⭐", href: "https://github.com/chenxing-dev?tab=stars" },
               {
                 name: "search code",
                 icon: "🔎",
                 dialog: true,
-                search: "https://github.com/search?type=code&q="
+                search: "https://github.com/search?type=code&q={}"
               },
               {
                 name: "search repositories",
                 icon: "🔍",
                 dialog: true,
-                search: "https://github.com/search?type=repository&q="
+                search: "https://github.com/search?type=repository&q={}"
               }
             ]
           },
@@ -406,14 +428,14 @@
             name: "npmjs.com",
             icon: "📦",
             href: "https://www.npmjs.com/",
-            search: "https://www.npmjs.com/search?q=",
+            search: "https://www.npmjs.com/search?q={}",
             dialog: true
           },
           {
             name: "searxng",
             icon: "🔎",
             href: "https://searx.foobar.vip/",
-            search: "https://searx.foobar.vip/search?q=",
+            search: "https://searx.foobar.vip/search?q={}",
             dialog: true
           },
           { name: "shadcn/ui", icon: "💅", href: "https://ui.shadcn.com/docs/components/" },
@@ -423,7 +445,7 @@
             shortcut: "t",
             icon: "👁️",
             href: "https://www.tianyancha.com/",
-            search: "https://www.tianyancha.com/search?key=",
+            search: "https://www.tianyancha.com/search?key={}",
             dialog: true
           },
           { name: "vue.js", icon: "🟢", href: "https://vuejs.org/guide/introduction.html" },
@@ -630,7 +652,10 @@
 
         performSearch() {
           if (this.dialogEntry && this.dialogEntry.search && this.searchTerm.trim()) {
-            const url = this.dialogEntry.search + encodeURIComponent(this.searchTerm.trim());
+            const term = encodeURIComponent(this.searchTerm.trim());
+
+            // Handle placeholder {} in search URLs
+            const url = this.dialogEntry.search.includes("{}") ? this.dialogEntry.search.replace("{}", term) : this.dialogEntry.search + term;
             window.open(url, "_blank");
           }
           this.showDialog = false;
