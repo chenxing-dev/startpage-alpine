@@ -229,6 +229,11 @@
         align-items: center;
         gap: 5px;
       }
+      .key-combo {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
       .key {
         display: inline-block;
         padding: 2px 6px;
@@ -285,6 +290,14 @@
         <div class="hint-item">
           <span>Open</span>
           <div><span class="key">→</span></div>
+        </div>
+        <div class="hint-item">
+          <span>Open in New Tab</span>
+          <div class="key-combo">
+            <span class="key">Ctrl</span>
+            <span>+</span>
+            <span class="key">→</span>
+          </div>
         </div>
         <div class="hint-item">
           <span>Back</span>
@@ -429,7 +442,7 @@
               name: "searxng",
               icon: "🔎",
               href: "https://searx.foobar.vip/",
-              search: "https://searx.foobar.vip/search?q={}",
+              search: "https://searx.foobar.vip/search?language=all&q={}",
               dialog: true
             },
             { name: "shadcn/ui", icon: "💅", href: "https://ui.shadcn.com/docs/components/" },
@@ -482,8 +495,10 @@
                   this.moveFocus(1);
                   break;
                 case "ArrowRight":
+                case "Enter":
                   event.preventDefault();
-                  this.openEntry();
+                  // Ctrl+Right/Enter opens in new tab
+                  this.openEntry(event.ctrlKey);
                   break;
                 case "ArrowLeft":
                   event.preventDefault();
@@ -531,18 +546,27 @@
             this.currentFocus = index;
 
             const entry = this.currentEntries[index];
+            const ctrlPressed = event.ctrlKey;
 
             if (entry.href) {
-              window.open(entry.href, "_blank");
+              this.openLink(entry.href, ctrlPressed);
             } else {
-              this.openEntry();
+              this.openEntry(ctrlPressed);
             }
 
             // Update the current match index if we're in a jump session
             this.updateCurrentMatchIndex();
           },
 
-          openEntry() {
+          openLink(url, inNewTab = false) {
+            if (inNewTab) {
+              window.open(url, "_blank");
+            } else {
+              window.open(url, "_self");
+            }
+          },
+
+          openEntry(inNewTab = false) {
             const entry = this.currentEntries[this.currentFocus];
 
             if (entry.content) {
@@ -564,14 +588,14 @@
               // Show search dialog
               this.dialogEntry = entry;
               this.showDialog = true;
+              this.openInNewTabForDialog = inNewTab;
 
               // Focus input when dialog appears
               this.$nextTick(() => {
                 this.$refs.searchInput.focus();
               });
             } else if (entry.href) {
-              // Open link in new tab
-              window.open(entry.href, "_blank");
+              this.openLink(entry.href, inNewTab);
             }
           },
 
@@ -650,7 +674,8 @@
 
               // Handle placeholder {} in search URLs
               const url = this.dialogEntry.search.includes("{}") ? this.dialogEntry.search.replace("{}", term) : this.dialogEntry.search + term;
-              window.open(url, "_blank");
+              const ctrlPressed = event.ctrlKey;
+              this.openLink(url, ctrlPressed);
             }
             this.showDialog = false;
             this.searchTerm = "";
