@@ -350,9 +350,27 @@
           {
             name: "archlinux.org",
             icon: "🐧",
-            href: "https://archlinux.org/packages/",
-            search: "https://archlinux.org/packages/?q={}",
-            dialog: true
+            href: "https://archlinux.org/",
+            content: [
+              {
+                name: "Packages",
+                icon: "📦",
+                dialog: true,
+                search: "https://archlinux.org/packages/?q={}"
+              },
+              {
+                name: "Wiki",
+                icon: "📚",
+                dialog: true,
+                search: "https://wiki.archlinux.org/index.php?search={}"
+              },
+              {
+                name: "AUR",
+                icon: "🧩",
+                dialog: true,
+                search: "https://aur.archlinux.org/packages?K={}"
+              }
+            ]
           },
           { name: "astro.build", icon: "🪐", href: "https://docs.astro.build/en/getting-started/" },
           {
@@ -376,6 +394,13 @@
                 search: "https://map.baidu.com/search/@12610000,2630000?querytype=s&wd={}"
               }
             ]
+          },
+          {
+            name: "bing",
+            icon: "🔎",
+            href: "https://www.bing.com/",
+            dialog: true,
+            search: "https://www.bing.com/search?q={}"
           },
           { name: "deepseek.com", icon: "🧠", href: "https://chat.deepseek.com/" },
           { name: "dev.to", icon: "💻", href: "https://dev.to/" },
@@ -434,8 +459,8 @@
           {
             name: "searxng",
             icon: "🔎",
-            href: "https://searx.foobar.vip/",
-            search: "https://searx.foobar.vip/search?q={}",
+            href: "https://searx.stream",
+            search: "https://searx.stream/search?q={}&language=all",
             dialog: true
           },
           { name: "shadcn/ui", icon: "💅", href: "https://ui.shadcn.com/docs/components/" },
@@ -454,6 +479,36 @@
             shortcut: "w",
             icon: "📤",
             href: "https://filehelper.weixin.qq.com/"
+          }
+          ,
+          {
+            name: "wikipedia",
+            icon: "📖",
+            href: "https://wikipedia.org/",
+            content: [
+              {
+                name: "前往首页",
+                icon: "🌏",
+                href: "https://zh.wikipedia.org/wiki/Wikipedia:首页"
+              },
+              {
+                name: "搜寻维基百科",
+                icon: "🔎",
+                dialog: true,
+                search: "https://zh.wikipedia.org/w/index.php?search={}"
+              },
+              {
+                name: "Main Page",
+                icon: "🌏",
+                href: "https://en.wikipedia.org/wiki/Main_Page"
+              },
+              {
+                name: "Search",
+                icon: "🔍",
+                dialog: true,
+                search: "https://en.wikipedia.org/w/index.php?search={}"
+              }
+            ]
           }
         ],
 
