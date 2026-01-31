@@ -1,0 +1,237 @@
+[
+  { "name": "126网易免费邮", "icon": "✉️", "href": "https://mail.126.com/" },
+  {
+    "name": "adonisjs.com",
+    "icon": "🛠️",
+    "href": "https://docs.adonisjs.com/"
+  },
+  {
+    "name": "alamy",
+    "icon": "🖼️",
+    "href": "https://www.alamy.com",
+    "search": "https://www.alamy.com/stock-photo/{}.html?sortBy=newest",
+    "dialog": true
+  },
+  {
+    "name": "Alpine.js",
+    "icon": "⛰️",
+    "href": "https://alpinejs.dev/"
+  },
+  {
+    "name": "archlinux.org",
+    "icon": "🐧",
+    "href": "https://archlinux.org/",
+    "content": [
+      {
+        "name": "Packages",
+        "icon": "📦",
+        "dialog": true,
+        "search": "https://archlinux.org/packages/?q={}"
+      },
+      {
+        "name": "Wiki",
+        "icon": "📚",
+        "dialog": true,
+        "search": "https://wiki.archlinux.org/index.php?search={}"
+      },
+      {
+        "name": "AUR",
+        "icon": "🧩",
+        "dialog": true,
+        "search": "https://aur.archlinux.org/packages?K={}"
+      }
+    ]
+  },
+  {
+    "name": "astro.build",
+    "icon": "🪐",
+    "href": "https://docs.astro.build/en/getting-started/"
+  },
+  {
+    "name": "百度",
+    "shortcut": "b",
+    "icon": "🔍",
+    "href": "https://www.baidu.com/",
+    "content": [
+      {
+        "name": "网页",
+        "shortcut": "w",
+        "icon": "🌐",
+        "dialog": true,
+        "search": "https://www.baidu.com/s?wd={}"
+      },
+      {
+        "name": "地图",
+        "shortcut": "d",
+        "icon": "🗺️",
+        "dialog": true,
+        "search": "https://map.baidu.com/search/@12610000,2630000?querytype=s&wd={}"
+      }
+    ]
+  },
+  {
+    "name": "bing",
+    "icon": "🔎",
+    "href": "https://www.bing.com/",
+    "dialog": true,
+    "search": "https://www.bing.com/search?q={}"
+  },
+  {
+    "name": "deepseek.com",
+    "icon": "🧠",
+    "href": "https://chat.deepseek.com/"
+  },
+  { "name": "dev.to", "icon": "💻", "href": "https://dev.to/" },
+  {
+    "name": "gitee",
+    "icon": "👍",
+    "href": "https://gitee.com/",
+    "content": [
+      {
+        "name": "dashboard",
+        "icon": "📊",
+        "href": "https://gitee.com/dashboard"
+      },
+      {
+        "name": "repositories",
+        "icon": "📁",
+        "href": "https://gitee.com/dashboard/projects"
+      },
+      {
+        "name": "search repositories",
+        "icon": "🔍",
+        "dialog": true,
+        "search": "https://so.gitee.com/?q={}"
+      }
+    ]
+  },
+  {
+    "name": "github.com",
+    "icon": "🐙",
+    "href": "https://github.com/",
+    "content": [
+      {
+        "name": "dashboard",
+        "icon": "📊",
+        "href": "https://github.com/dashboard"
+      },
+      {
+        "name": "repositories",
+        "icon": "📁",
+        "href": "https://github.com/chenxing-dev?tab=repositories"
+      },
+      {
+        "name": "stars",
+        "icon": "⭐",
+        "href": "https://github.com/chenxing-dev?tab=stars"
+      },
+      {
+        "name": "search code",
+        "icon": "🔎",
+        "dialog": true,
+        "search": "https://github.com/search?type=code&q={}"
+      },
+      {
+        "name": "search repositories",
+        "icon": "🔍",
+        "dialog": true,
+        "search": "https://github.com/search?type=repository&q={}"
+      }
+    ]
+  },
+  {
+    "name": "广州市人民政府",
+    "shortcut": "g",
+    "icon": "🏛️",
+    "href": "https://www.gz.gov.cn/"
+  },
+  {
+    "name": "makefrontendshitagain",
+    "icon": "💩",
+    "href": "https://makefrontendshitagain.party/"
+  },
+  {
+    "name": "nerdfonts.com",
+    "icon": "🔤",
+    "href": "https://www.nerdfonts.com/cheat-sheet"
+  },
+  {
+    "name": "npmjs.com",
+    "icon": "📦",
+    "href": "https://www.npmjs.com/",
+    "search": "https://www.npmjs.com/search?q={}",
+    "dialog": true
+  },
+  {
+    "name": "searxng",
+    "icon": "🔎",
+    "href": "https://priv.au",
+    "search": "https://priv.au/search?q={}&language=all",
+    "dialog": true
+  },
+  {
+    "name": "shadcn/ui",
+    "icon": "💅",
+    "href": "https://ui.shadcn.com/docs/components/"
+  },
+  {
+    "name": "simpleicons.org",
+    "icon": "🔲",
+    "href": "https://simpleicons.org/",
+    "dialog": true,
+    "search": "https://simpleicons.org/?q={}"
+  },
+  {
+    "name": "tailwindcss",
+    "icon": "🌀",
+    "href": "https://tailwindcss.com/docs/"
+  },
+  {
+    "name": "天眼查",
+    "shortcut": "t",
+    "icon": "👁️",
+    "href": "https://www.tianyancha.com/",
+    "search": "https://www.tianyancha.com/search?key={}",
+    "dialog": true
+  },
+  {
+    "name": "vue.js",
+    "icon": "🟢",
+    "href": "https://vuejs.org/guide/introduction.html"
+  },
+  {
+    "name": "微信文件传输助手",
+    "shortcut": "w",
+    "icon": "📤",
+    "href": "https://filehelper.weixin.qq.com/"
+  },
+  {
+    "name": "wikipedia",
+    "icon": "📖",
+    "href": "https://wikipedia.org/",
+    "content": [
+      {
+        "name": "前往首页",
+        "icon": "🌏",
+        "href": "https://zh.wikipedia.org/wiki/Wikipedia:首页"
+      },
+      {
+        "name": "搜寻维基百科",
+        "icon": "🔎",
+        "dialog": true,
+        "search": "https://zh.wikipedia.org/w/index.php?search={}"
+      },
+      {
+        "name": "Main Page",
+        "icon": "🌏",
+        "href": "https://en.wikipedia.org/wiki/Main_Page"
+      },
+      {
+        "name": "Search",
+        "icon": "🔍",
+        "dialog": true,
+        "search": "https://en.wikipedia.org/w/index.php?search={}"
+      }
+    ]
+  }
+]

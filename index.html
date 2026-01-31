@@ -1,757 +1,613 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>New tab</title>
-  <link rel="icon" href="#" />
-  <script src="https://unpkg.com/alpinejs" defer></script>
-  <style>
-    /* GitHub Light High Contrast Theme */
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #0e1116;
-      --cursor-color: #0e1116;
-      --selection-bg: #0969da;
-      --selection-color: #ffffff;
-      --focus-bg: #edeef0;
-      --border-color: #d7dfe6;
-      --accent-color: #0969da;
-      --terminal-height: 85vh;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: "Fira Code", "黑体", "Consolas", monospace;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .terminal {
-      width: 100%;
-      max-width: 800px;
-      max-height: var(--terminal-height);
-      background-color: var(--bg-color);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .terminal-header {
-      background-color: var(--focus-bg);
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .terminal-button {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .close {
-      background-color: #ff5f56;
-    }
-
-    .minimize {
-      background-color: #ffbd2e;
-    }
-
-    .maximize {
-      background-color: #27c93f;
-    }
-
-    .terminal-body {
-      padding: 10px 12px;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .path-indicator {
-      color: var(--accent-color);
-      padding: 6px 10px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .path-indicator::after {
-      content: ">";
-      font-weight: bold;
-    }
-
-    .entry {
-      padding: 6px 10px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.2s ease;
-    }
-
-    .entry:hover {
-      background-color: var(--focus-bg);
-      transform: translateX(3px);
-    }
-
-    .entry.focused {
-      background-color: var(--focus-bg);
-      box-shadow: inset 3px 0 0 var(--accent-color);
-    }
-
-    .entry-icon {
-      margin-right: 10px;
-      min-width: 20px;
-      text-align: center;
-    }
-
-    .entry-name {
-      flex-grow: 1;
-    }
-
-    .dialog {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-    }
-
-    .dialog-content {
-      background-color: var(--bg-color);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 0;
-      width: 90%;
-      max-width: 600px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-    }
-
-    .dialog-header {
-      background-color: var(--focus-bg);
-      padding: 12px 20px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: bold;
-    }
-
-    .dialog-title {
-      flex-grow: 1;
-    }
-
-    .dialog-close {
-      background: none;
-      border: none;
-      font-size: 1.2em;
-      cursor: pointer;
-      padding: 5px;
-    }
-
-    .dialog-body {
-      padding: 8px 20px;
-    }
-
-    .dialog-input-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .dialog-prompt {
-      color: var(--accent-color);
-      font-weight: bold;
-    }
-
-    .dialog-input {
-      flex-grow: 1;
-      padding: 12px 0px;
-      font-family: inherit;
-      border: none;
-      font-size: 1em;
-      transition: all 0.2s ease;
-      background-color: transparent;
-    }
-
-    .dialog-input:focus {
-      outline: none;
-    }
-
-    .dialog-footer {
-      padding: 15px 25px;
-      background-color: var(--focus-bg);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9em;
-      color: #6e7781;
-    }
-
-    .key-hint {
-      padding: 6px;
-      border-top: 1px solid var(--border-color);
-      background-color: var(--focus-bg);
-      font-size: 0.9em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      flex-shrink: 0;
-    }
-
-    .hint-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .key-combo {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-
-    .key {
-      display: inline-block;
-      padding: 2px 6px;
-      background-color: var(--bg-color);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      margin: 0 2px;
-      min-width: 28px;
-      text-align: center;
-    }
-
-    @media (max-height: 700px) {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New tab</title>
+    <link rel="icon" href="#" />
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <style>
+      /* GitHub Light High Contrast Theme */
       :root {
+        --bg-color: #ffffff;
+        --text-color: #0e1116;
+        --cursor-color: #0e1116;
+        --selection-bg: #0969da;
+        --selection-color: #ffffff;
+        --focus-bg: #edeef0;
+        --border-color: #d7dfe6;
+        --accent-color: #0969da;
         --terminal-height: 85vh;
       }
-    }
 
-    @media (max-width: 420px) {
-      .key-hint {
-        display: none;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
-</head>
 
-<body>
-  <div class="terminal" x-data="startpage()" @keydown.window="handleKey">
-    <div class="terminal-header">
-      <div class="terminal-button close"></div>
-      <div class="terminal-button minimize"></div>
-      <div class="terminal-button maximize"></div>
-    </div>
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: "Fira Code", "黑体", "Consolas", monospace;
+        line-height: 1.5;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
 
-    <div class="terminal-body" x-ref="terminalBody">
-      <div class="path-indicator">
-        <span x-text="path"></span>
+      .terminal {
+        width: 100%;
+        max-width: 800px;
+        max-height: var(--terminal-height);
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .terminal-header {
+        background-color: var(--focus-bg);
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .terminal-button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .close {
+        background-color: #ff5f56;
+      }
+
+      .minimize {
+        background-color: #ffbd2e;
+      }
+
+      .maximize {
+        background-color: #27c93f;
+      }
+
+      .terminal-body {
+        padding: 10px 12px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .path-indicator {
+        color: var(--accent-color);
+        padding: 6px 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .path-indicator::after {
+        content: ">";
+        font-weight: bold;
+      }
+
+      .entry {
+        padding: 6px 10px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+
+      .entry:hover {
+        background-color: var(--focus-bg);
+        transform: translateX(3px);
+      }
+
+      .entry.focused {
+        background-color: var(--focus-bg);
+        box-shadow: inset 3px 0 0 var(--accent-color);
+      }
+
+      .entry-icon {
+        margin-right: 10px;
+        min-width: 20px;
+        text-align: center;
+      }
+
+      .entry-name {
+        flex-grow: 1;
+      }
+
+      .dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+      }
+
+      .dialog-content {
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+
+      .dialog-header {
+        background-color: var(--focus-bg);
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+      }
+
+      .dialog-title {
+        flex-grow: 1;
+      }
+
+      .dialog-close {
+        background: none;
+        border: none;
+        font-size: 1.2em;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      .dialog-body {
+        padding: 8px 20px;
+      }
+
+      .dialog-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .dialog-prompt {
+        color: var(--accent-color);
+        font-weight: bold;
+      }
+
+      .dialog-input {
+        flex-grow: 1;
+        padding: 12px 0px;
+        font-family: inherit;
+        border: none;
+        font-size: 1em;
+        transition: all 0.2s ease;
+        background-color: transparent;
+      }
+
+      .dialog-input:focus {
+        outline: none;
+      }
+
+      .dialog-footer {
+        padding: 15px 25px;
+        background-color: var(--focus-bg);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9em;
+        color: #6e7781;
+      }
+
+      .key-hint {
+        padding: 6px;
+        border-top: 1px solid var(--border-color);
+        background-color: var(--focus-bg);
+        font-size: 0.9em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+      }
+
+      .hint-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .key-combo {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .key {
+        display: inline-block;
+        padding: 2px 6px;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        margin: 0 2px;
+        min-width: 28px;
+        text-align: center;
+      }
+
+      @media (max-height: 700px) {
+        :root {
+          --terminal-height: 85vh;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .key-hint {
+          display: none;
+        }
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="terminal" x-data="startpage()" @keydown.window="handleKey">
+      <div class="terminal-header">
+        <div class="terminal-button close"></div>
+        <div class="terminal-button minimize"></div>
+        <div class="terminal-button maximize"></div>
       </div>
 
-      <template x-for="(entry, index) in currentEntries" :key="index">
-        <div>
-          <div class="entry" :class="{ 'focused': currentFocus === index }" @click="handleClick(index)">
-            <div class="entry-icon" x-text="entry.icon || '📄'"></div>
-            <div class="entry-name" x-text="entry.name"></div>
+      <div class="terminal-body" x-ref="terminalBody">
+        <div class="path-indicator">
+          <span x-text="path"></span>
+        </div>
+
+        <template x-for="(entry, index) in currentEntries" :key="index">
+          <div>
+            <div
+              class="entry"
+              :class="{ 'focused': currentFocus === index }"
+              @click="handleClick(index)"
+            >
+              <div class="entry-icon" x-text="entry.icon || '📄'"></div>
+              <div class="entry-name" x-text="entry.name"></div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <div class="key-hint">
+        <div class="hint-item">
+          <span>Navigate</span>
+          <div><span class="key">↑</span> <span class="key">↓</span></div>
+        </div>
+        <div class="hint-item">
+          <span>Open</span>
+          <div><span class="key">→</span></div>
+        </div>
+        <div class="hint-item">
+          <span>Open in New Tab</span>
+          <div class="key-combo">
+            <span class="key">Ctrl</span>
+            <span>+</span>
+            <span class="key">→</span>
+          </div>
+        </div>
+        <div class="hint-item">
+          <span>Back</span>
+          <div><span class="key">←</span></div>
+        </div>
+        <div class="hint-item">
+          <span>Jump</span>
+          <div><span class="key">0-Z</span></div>
+        </div>
+      </div>
+
+      <template x-if="showDialog">
+        <div class="dialog">
+          <div class="dialog-content">
+            <div class="dialog-header">
+              <div class="dialog-title">
+                <span x-text="dialogEntry.icon || '🔍'"></span>
+                <span x-text="dialogEntry.name"></span>
+              </div>
+              <button class="dialog-close" @click="showDialog = false">
+                ✕
+              </button>
+            </div>
+
+            <div class="dialog-body">
+              <div class="dialog-input-wrapper">
+                <div class="dialog-prompt">></div>
+                <input
+                  type="text"
+                  class="dialog-input"
+                  placeholder="Enter your search term..."
+                  x-model="searchTerm"
+                  @keydown.enter="performSearch"
+                  @keydown.esc="showDialog = false"
+                  x-ref="searchInput"
+                  autofocus
+                />
+              </div>
+            </div>
+
+            <div class="dialog-footer">
+              <div>Press Enter to search</div>
+              <div>Press Esc to cancel</div>
+            </div>
           </div>
         </div>
       </template>
     </div>
 
-    <div class="key-hint">
-      <div class="hint-item">
-        <span>Navigate</span>
-        <div><span class="key">↑</span> <span class="key">↓</span></div>
-      </div>
-      <div class="hint-item">
-        <span>Open</span>
-        <div><span class="key">→</span></div>
-      </div>
-      <div class="hint-item">
-        <span>Open in New Tab</span>
-        <div class="key-combo">
-          <span class="key">Ctrl</span>
-          <span>+</span>
-          <span class="key">→</span>
-        </div>
-      </div>
-      <div class="hint-item">
-        <span>Back</span>
-        <div><span class="key">←</span></div>
-      </div>
-      <div class="hint-item">
-        <span>Jump</span>
-        <div><span class="key">0-Z</span></div>
-      </div>
-    </div>
+    <script>
+      document.addEventListener("alpine:init", () => {
+        Alpine.data("startpage", () => ({
+          // Current state
+          currentEntries: [],
+          path: "~",
+          stack: [],
+          currentFocus: 0,
+          showDialog: false,
+          dialogEntry: null,
+          searchTerm: "",
+          lastJumpKey: null,
+          jumpMatches: [],
+          currentMatchIndex: -1,
 
-    <template x-if="showDialog">
-      <div class="dialog">
-        <div class="dialog-content">
-          <div class="dialog-header">
-            <div class="dialog-title">
-              <span x-text="dialogEntry.icon || '🔍'"></span>
-              <span x-text="dialogEntry.name"></span>
-            </div>
-            <button class="dialog-close" @click="showDialog = false">✕</button>
-          </div>
+          init() {
+            this.loadBookmarks();
+            // Focus the terminal on load
+            this.$el.focus();
+          },
 
-          <div class="dialog-body">
-            <div class="dialog-input-wrapper">
-              <div class="dialog-prompt">></div>
-              <input type="text" class="dialog-input" placeholder="Enter your search term..." x-model="searchTerm"
-                @keydown.enter="performSearch" @keydown.esc="showDialog = false" x-ref="searchInput" autofocus />
-            </div>
-          </div>
-
-          <div class="dialog-footer">
-            <div>Press Enter to search</div>
-            <div>Press Esc to cancel</div>
-          </div>
-        </div>
-      </div>
-    </template>
-  </div>
-
-  <script>
-    document.addEventListener("alpine:init", () => {
-      Alpine.data("startpage", () => ({
-        files: [
-          { name: "126网易免费邮", icon: "✉️", href: "https://mail.126.com/" },
-          { name: "adonisjs.com", icon: "🛠️", href: "https://docs.adonisjs.com/" },
-          {
-            name: "alamy",
-            icon: "🖼️",
-            href: "https://www.alamy.com",
-            search: "https://www.alamy.com/stock-photo/{}.html?sortBy=newest",
-            dialog: true
-          },
-          {
-            name: "Alpine.js",
-            icon: "⛰️",
-            href: "https://alpinejs.dev/"
-          },
-          {
-            name: "archlinux.org",
-            icon: "🐧",
-            href: "https://archlinux.org/",
-            content: [
-              {
-                name: "Packages",
-                icon: "📦",
-                dialog: true,
-                search: "https://archlinux.org/packages/?q={}"
-              },
-              {
-                name: "Wiki",
-                icon: "📚",
-                dialog: true,
-                search: "https://wiki.archlinux.org/index.php?search={}"
-              },
-              {
-                name: "AUR",
-                icon: "🧩",
-                dialog: true,
-                search: "https://aur.archlinux.org/packages?K={}"
-              }
-            ]
-          },
-          { name: "astro.build", icon: "🪐", href: "https://docs.astro.build/en/getting-started/" },
-          {
-            name: "百度",
-            shortcut: "b",
-            icon: "🔍",
-            href: "https://www.baidu.com/",
-            content: [
-              {
-                name: "网页",
-                shortcut: "w",
-                icon: "🌐",
-                dialog: true,
-                search: "https://www.baidu.com/s?wd={}"
-              },
-              {
-                name: "地图",
-                shortcut: "d",
-                icon: "🗺️",
-                dialog: true,
-                search: "https://map.baidu.com/search/@12610000,2630000?querytype=s&wd={}"
-              }
-            ]
-          },
-          {
-            name: "bing",
-            icon: "🔎",
-            href: "https://www.bing.com/",
-            dialog: true,
-            search: "https://www.bing.com/search?q={}"
-          },
-          { name: "deepseek.com", icon: "🧠", href: "https://chat.deepseek.com/" },
-          { name: "dev.to", icon: "💻", href: "https://dev.to/" },
-          {
-            name: "gitee",
-            icon: "👍",
-            href: "https://gitee.com/",
-            content: [
-              { name: "dashboard", icon: "📊", href: "https://gitee.com/dashboard" },
-              { name: "repositories", icon: "📁", href: "https://gitee.com/dashboard/projects" },
-              {
-                name: "search repositories",
-                icon: "🔍",
-                dialog: true,
-                search: "https://so.gitee.com/?q={}"
-              }
-            ]
-          },
-          {
-            name: "github.com",
-            icon: "🐙",
-            href: "https://github.com/",
-            content: [
-              { name: "dashboard", icon: "📊", href: "https://github.com/dashboard" },
-              { name: "repositories", icon: "📁", href: "https://github.com/chenxing-dev?tab=repositories" },
-              { name: "stars", icon: "⭐", href: "https://github.com/chenxing-dev?tab=stars" },
-              {
-                name: "search code",
-                icon: "🔎",
-                dialog: true,
-                search: "https://github.com/search?type=code&q={}"
-              },
-              {
-                name: "search repositories",
-                icon: "🔍",
-                dialog: true,
-                search: "https://github.com/search?type=repository&q={}"
-              }
-            ]
-          },
-          {
-            name: "广州市人民政府",
-            shortcut: "g",
-            icon: "🏛️",
-            href: "https://www.gz.gov.cn/"
-          },
-          { name: "makefrontendshitagain", icon: "💩", href: "https://makefrontendshitagain.party/" },
-          { name: "nerdfonts.com", icon: "🔤", href: "https://www.nerdfonts.com/cheat-sheet" },
-          {
-            name: "npmjs.com",
-            icon: "📦",
-            href: "https://www.npmjs.com/",
-            search: "https://www.npmjs.com/search?q={}",
-            dialog: true
-          },
-          {
-            name: "searxng",
-            icon: "🔎",
-            href: "https://priv.au",
-            search: "https://priv.au/search?q={}&language=all",
-            dialog: true
-          },
-          { name: "shadcn/ui", icon: "💅", href: "https://ui.shadcn.com/docs/components/" },
-          {
-            name: "simpleicons.org",
-            icon: "🔲",
-            href: "https://simpleicons.org/",
-            dialog: true,
-            search: "https://simpleicons.org/?q={}"
-          },
-          { name: "tailwindcss", icon: "🌀", href: "https://tailwindcss.com/docs/" },
-          {
-            name: "天眼查",
-            shortcut: "t",
-            icon: "👁️",
-            href: "https://www.tianyancha.com/",
-            search: "https://www.tianyancha.com/search?key={}",
-            dialog: true
-          },
-          { name: "vue.js", icon: "🟢", href: "https://vuejs.org/guide/introduction.html" },
-          {
-            name: "微信文件传输助手",
-            shortcut: "w",
-            icon: "📤",
-            href: "https://filehelper.weixin.qq.com/"
-          }
-          ,
-          {
-            name: "wikipedia",
-            icon: "📖",
-            href: "https://wikipedia.org/",
-            content: [
-              {
-                name: "前往首页",
-                icon: "🌏",
-                href: "https://zh.wikipedia.org/wiki/Wikipedia:首页"
-              },
-              {
-                name: "搜寻维基百科",
-                icon: "🔎",
-                dialog: true,
-                search: "https://zh.wikipedia.org/w/index.php?search={}"
-              },
-              {
-                name: "Main Page",
-                icon: "🌏",
-                href: "https://en.wikipedia.org/wiki/Main_Page"
-              },
-              {
-                name: "Search",
-                icon: "🔍",
-                dialog: true,
-                search: "https://en.wikipedia.org/w/index.php?search={}"
-              }
-            ]
-          }
-        ],
-
-        // Current state
-        currentEntries: [],
-        path: "~",
-        stack: [],
-        currentFocus: 0,
-        showDialog: false,
-        dialogEntry: null,
-        searchTerm: "",
-        lastJumpKey: null,
-        jumpMatches: [],
-        currentMatchIndex: -1,
-
-        init() {
-          this.currentEntries = this.files;
-          // Focus the terminal on load
-          this.$el.focus();
-        },
-
-        handleKey(event) {
-          // Handle keys only when dialog is not open
-          if (!this.showDialog) {
-            switch (event.key) {
-              case "ArrowUp":
-                event.preventDefault();
-                this.moveFocus(-1);
-                break;
-              case "ArrowDown":
-                event.preventDefault();
-                this.moveFocus(1);
-                break;
-              case "ArrowRight":
-              case "Enter":
-                event.preventDefault();
-                // Ctrl+Right/Enter opens in new tab
-                this.openEntry(event.ctrlKey);
-                break;
-              case "ArrowLeft":
-                event.preventDefault();
-                this.goBack();
-                break;
-              case "Escape":
-                event.preventDefault();
-                this.goBack();
-                break;
-              default:
-                // Check if pressed key is a letter
-                if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
-                  event.preventDefault();
-                  this.jumpTo(event.key.toLowerCase());
-                }
-            }
-          }
-          // Handle dialog-specific keys
-          else if (event.key === "Escape") {
-            this.showDialog = false;
-          }
-        },
-
-        moveFocus(direction) {
-          this.currentFocus = (this.currentFocus + direction + this.currentEntries.length) % this.currentEntries.length;
-
-          // Scroll focused element into view
-          this.$nextTick(() => {
-            const focusedElement = this.$refs.terminalBody.querySelector(".entry.focused");
-            if (focusedElement) {
-              focusedElement.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-                inline: "nearest"
+          async loadBookmarks() {
+            try {
+              const res = await fetch("./bookmarks.json", {
+                cache: "no-store",
               });
+              if (!res.ok) return;
+              const data = await res.json();
+              if (!Array.isArray(data)) return;
+              this.currentEntries = data;
+            } catch {
+              // Ignore and keep the inline data.
             }
-          });
+          },
 
-          // Update the current match index if we're in a jump session
-          this.updateCurrentMatchIndex();
-        },
-
-        handleClick(index) {
-          // Set focus to the clicked item
-          this.currentFocus = index;
-
-          const entry = this.currentEntries[index];
-          const ctrlPressed = event.ctrlKey;
-
-          if (entry.href) {
-            this.openLink(entry.href, ctrlPressed);
-          } else {
-            this.openEntry(ctrlPressed);
-          }
-
-          // Update the current match index if we're in a jump session
-          this.updateCurrentMatchIndex();
-        },
-
-        openLink(url, inNewTab = false) {
-          if (inNewTab) {
-            window.open(url, "_blank");
-          } else {
-            window.open(url, "_self");
-          }
-        },
-
-        openEntry(inNewTab = false) {
-          const entry = this.currentEntries[this.currentFocus];
-
-          if (entry.content) {
-            // Save current state to stack
-            this.stack.push({
-              entries: this.currentEntries,
-              focus: this.currentFocus,
-              path: this.path
-            });
-
-            // Navigate to sub-content
-            this.currentEntries = entry.content;
-            this.path += `/${entry.name}`;
-            this.currentFocus = 0;
-            // Reset jump state when navigating
-            this.lastJumpKey = null;
-            this.jumpMatches = [];
-          } else if (entry.dialog) {
-            // Show search dialog
-            this.dialogEntry = entry;
-            this.showDialog = true;
-            this.openInNewTabForDialog = inNewTab;
-
-            // Focus input when dialog appears
-            this.$nextTick(() => {
-              this.$refs.searchInput.focus();
-            });
-          } else if (entry.href) {
-            this.openLink(entry.href, inNewTab);
-          }
-        },
-
-        goBack() {
-          if (this.stack.length > 0) {
-            const prev = this.stack.pop();
-            this.currentEntries = prev.entries;
-            this.currentFocus = prev.focus;
-            this.path = prev.path;
-            // Reset jump state when going back
-            this.lastJumpKey = null;
-            this.jumpMatches = [];
-            this.currentMatchIndex = -1;
-          }
-        },
-
-        updateCurrentMatchIndex() {
-          if (this.lastJumpKey && this.jumpMatches.length > 0) {
-            const currentIndex = this.jumpMatches.indexOf(this.currentFocus);
-            if (currentIndex !== -1) {
-              this.currentMatchIndex = currentIndex;
-            }
-          }
-        },
-
-        jumpTo(letter) {
-          // If it's a new letter, find all matches
-          if (this.lastJumpKey !== letter) {
-            this.jumpMatches = [];
-            this.currentMatchIndex = -1;
-            this.lastJumpKey = letter;
-
-            // Find all entries that match by shortcut or first letter
-            for (let i = 0; i < this.currentEntries.length; i++) {
-              const entry = this.currentEntries[i];
-              // Prioritize shortcut if it exists
-              if (entry.shortcut && entry.shortcut.toLowerCase() === letter) {
-                this.jumpMatches.push(i);
-              }
-              // Otherwise match by first letter of name
-              else if (!entry.shortcut && entry.name.charAt(0).toLowerCase() === letter) {
-                this.jumpMatches.push(i);
+          handleKey(event) {
+            // Handle keys only when dialog is not open
+            if (!this.showDialog) {
+              switch (event.key) {
+                case "ArrowUp":
+                  event.preventDefault();
+                  this.moveFocus(-1);
+                  break;
+                case "ArrowDown":
+                  event.preventDefault();
+                  this.moveFocus(1);
+                  break;
+                case "ArrowRight":
+                case "Enter":
+                  event.preventDefault();
+                  // Ctrl+Right/Enter opens in new tab
+                  this.openEntry(event.ctrlKey);
+                  break;
+                case "ArrowLeft":
+                  event.preventDefault();
+                  this.goBack();
+                  break;
+                case "Escape":
+                  event.preventDefault();
+                  this.goBack();
+                  break;
+                default:
+                  // Check if pressed key is a letter
+                  if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
+                    event.preventDefault();
+                    this.jumpTo(event.key.toLowerCase());
+                  }
               }
             }
-
-            if (this.jumpMatches.length === 0) {
-              return;
+            // Handle dialog-specific keys
+            else if (event.key === "Escape") {
+              this.showDialog = false;
             }
-          }
+          },
 
-          // If we have matches, move to next one
-          if (this.jumpMatches.length > 0) {
-            // Increment the match index
-            this.currentMatchIndex = (this.currentMatchIndex + 1) % this.jumpMatches.length;
+          moveFocus(direction) {
+            this.currentFocus =
+              (this.currentFocus + direction + this.currentEntries.length) %
+              this.currentEntries.length;
 
-            // Set the new focus
-            this.currentFocus = this.jumpMatches[this.currentMatchIndex];
-
-            // Scroll to the focused element
+            // Scroll focused element into view
             this.$nextTick(() => {
-              const focusedElement = this.$refs.terminalBody.querySelector(".entry.focused");
+              const focusedElement =
+                this.$refs.terminalBody.querySelector(".entry.focused");
               if (focusedElement) {
                 focusedElement.scrollIntoView({
                   behavior: "smooth",
                   block: "nearest",
-                  inline: "nearest"
+                  inline: "nearest",
                 });
               }
             });
-          }
-        },
 
-        performSearch() {
-          if (this.dialogEntry && this.dialogEntry.search && this.searchTerm.trim()) {
-            const term = encodeURIComponent(this.searchTerm.trim());
+            // Update the current match index if we're in a jump session
+            this.updateCurrentMatchIndex();
+          },
 
-            // Handle placeholder {} in search URLs
-            const url = this.dialogEntry.search.includes("{}") ? this.dialogEntry.search.replace("{}", term) : this.dialogEntry.search + term;
+          handleClick(index) {
+            // Set focus to the clicked item
+            this.currentFocus = index;
+
+            const entry = this.currentEntries[index];
             const ctrlPressed = event.ctrlKey;
-            this.openLink(url, ctrlPressed);
-          }
-          this.showDialog = false;
-          this.searchTerm = "";
-        }
-      }));
-    });
-  </script>
-</body>
 
+            if (entry.href) {
+              this.openLink(entry.href, ctrlPressed);
+            } else {
+              this.openEntry(ctrlPressed);
+            }
+
+            // Update the current match index if we're in a jump session
+            this.updateCurrentMatchIndex();
+          },
+
+          openLink(url, inNewTab = false) {
+            if (inNewTab) {
+              window.open(url, "_blank");
+            } else {
+              window.open(url, "_self");
+            }
+          },
+
+          openEntry(inNewTab = false) {
+            const entry = this.currentEntries[this.currentFocus];
+
+            if (entry.content) {
+              // Save current state to stack
+              this.stack.push({
+                entries: this.currentEntries,
+                focus: this.currentFocus,
+                path: this.path,
+              });
+
+              // Navigate to sub-content
+              this.currentEntries = entry.content;
+              this.path += `/${entry.name}`;
+              this.currentFocus = 0;
+              // Reset jump state when navigating
+              this.lastJumpKey = null;
+              this.jumpMatches = [];
+            } else if (entry.dialog) {
+              // Show search dialog
+              this.dialogEntry = entry;
+              this.showDialog = true;
+              this.openInNewTabForDialog = inNewTab;
+
+              // Focus input when dialog appears
+              this.$nextTick(() => {
+                this.$refs.searchInput.focus();
+              });
+            } else if (entry.href) {
+              this.openLink(entry.href, inNewTab);
+            }
+          },
+
+          goBack() {
+            if (this.stack.length > 0) {
+              const prev = this.stack.pop();
+              this.currentEntries = prev.entries;
+              this.currentFocus = prev.focus;
+              this.path = prev.path;
+              // Reset jump state when going back
+              this.lastJumpKey = null;
+              this.jumpMatches = [];
+              this.currentMatchIndex = -1;
+            }
+          },
+
+          updateCurrentMatchIndex() {
+            if (this.lastJumpKey && this.jumpMatches.length > 0) {
+              const currentIndex = this.jumpMatches.indexOf(this.currentFocus);
+              if (currentIndex !== -1) {
+                this.currentMatchIndex = currentIndex;
+              }
+            }
+          },
+
+          jumpTo(letter) {
+            // If it's a new letter, find all matches
+            if (this.lastJumpKey !== letter) {
+              this.jumpMatches = [];
+              this.currentMatchIndex = -1;
+              this.lastJumpKey = letter;
+
+              // Find all entries that match by shortcut or first letter
+              for (let i = 0; i < this.currentEntries.length; i++) {
+                const entry = this.currentEntries[i];
+                // Prioritize shortcut if it exists
+                if (entry.shortcut && entry.shortcut.toLowerCase() === letter) {
+                  this.jumpMatches.push(i);
+                }
+                // Otherwise match by first letter of name
+                else if (
+                  !entry.shortcut &&
+                  entry.name.charAt(0).toLowerCase() === letter
+                ) {
+                  this.jumpMatches.push(i);
+                }
+              }
+
+              if (this.jumpMatches.length === 0) {
+                return;
+              }
+            }
+
+            // If we have matches, move to next one
+            if (this.jumpMatches.length > 0) {
+              // Increment the match index
+              this.currentMatchIndex =
+                (this.currentMatchIndex + 1) % this.jumpMatches.length;
+
+              // Set the new focus
+              this.currentFocus = this.jumpMatches[this.currentMatchIndex];
+
+              // Scroll to the focused element
+              this.$nextTick(() => {
+                const focusedElement =
+                  this.$refs.terminalBody.querySelector(".entry.focused");
+                if (focusedElement) {
+                  focusedElement.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "nearest",
+                  });
+                }
+              });
+            }
+          },
+
+          performSearch() {
+            if (
+              this.dialogEntry &&
+              this.dialogEntry.search &&
+              this.searchTerm.trim()
+            ) {
+              const term = encodeURIComponent(this.searchTerm.trim());
+
+              // Handle placeholder {} in search URLs
+              const url = this.dialogEntry.search.includes("{}")
+                ? this.dialogEntry.search.replace("{}", term)
+                : this.dialogEntry.search + term;
+              const ctrlPressed = event.ctrlKey;
+              this.openLink(url, ctrlPressed);
+            }
+            this.showDialog = false;
+            this.searchTerm = "";
+          },
+        }));
+      });
+    </script>
+  </body>
 </html>
