@@ -1,11 +1,6 @@
 [
   { "name": "126网易免费邮", "icon": "✉️", "href": "https://mail.126.com/" },
   {
-    "name": "adonisjs.com",
-    "icon": "🛠️",
-    "href": "https://docs.adonisjs.com/"
-  },
-  {
     "name": "alamy",
     "icon": "🖼️",
     "href": "https://www.alamy.com",
@@ -81,7 +76,11 @@
     "icon": "🧠",
     "href": "https://chat.deepseek.com/"
   },
-  { "name": "dev.to", "icon": "💻", "href": "https://dev.to/" },
+  {
+    "name": "Element Plus",
+    "icon": "💠",
+    "href": "https://element-plus.org/en-US/component/overview"
+  },
   {
     "name": "gitee",
     "icon": "👍",
@@ -175,13 +174,6 @@
     "href": "https://ui.shadcn.com/docs/components/"
   },
   {
-    "name": "simpleicons.org",
-    "icon": "🔲",
-    "href": "https://simpleicons.org/",
-    "dialog": true,
-    "search": "https://simpleicons.org/?q={}"
-  },
-  {
     "name": "tailwindcss",
     "icon": "🌀",
     "href": "https://tailwindcss.com/docs/"
@@ -204,6 +196,11 @@
     "shortcut": "w",
     "icon": "📤",
     "href": "https://filehelper.weixin.qq.com/"
+  },
+  {
+    "name": "WPS云文档",
+    "icon": "📄",
+    "href": "https://www.kdocs.cn/"
   },
   {
     "name": "wikipedia",
