@@ -139,6 +139,13 @@
     ]
   },
   {
+    "name": "google",
+    "icon": "🌐",
+    "href": "https://www.google.com/",
+    "dialog": true,
+    "search": "https://www.google.com/search?q={}"
+  },
+  {
     "name": "广州市人民政府",
     "shortcut": "g",
     "icon": "🏛️",
