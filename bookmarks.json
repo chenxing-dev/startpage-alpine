@@ -162,10 +162,10 @@
     "href": "https://www.nerdfonts.com/cheat-sheet"
   },
   {
-    "name": "npmjs.com",
-    "icon": "📦",
-    "href": "https://www.npmjs.com/",
-    "search": "https://www.npmjs.com/search?q={}",
+    "name": "npmx.dev",
+    "icon": "./",
+    "href": "https://www.npmx.dev/",
+    "search": "https://www.npmx.dev/search?q={}",
     "dialog": true
   },
   {
