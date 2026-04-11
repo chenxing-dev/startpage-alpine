@@ -77,6 +77,11 @@
     "href": "https://chat.deepseek.com/"
   },
   {
+    "name": "豆包",
+    "icon": "🫘",
+    "href": "https://www.doubao.com/chat"
+  },
+  {
     "name": "Element Plus",
     "icon": "💠",
     "href": "https://element-plus.org/en-US/component/overview"
