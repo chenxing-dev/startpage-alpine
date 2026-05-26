@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -29,7 +29,7 @@
       body {
         background-color: var(--bg-color);
         color: var(--text-color);
-        font-family: "Fira Code", "黑体", "Consolas", monospace;
+        font-family: "Fira Code", "Microsoft YaHei", "Consolas", monospace;
         line-height: 1.5;
         min-height: 100vh;
         display: flex;
@@ -69,9 +69,11 @@
       .close {
         background-color: #ff5f56;
       }
+
       .minimize {
         background-color: #ffbd2e;
       }
+
       .maximize {
         background-color: #27c93f;
       }
@@ -223,16 +225,19 @@
         flex-wrap: wrap;
         flex-shrink: 0;
       }
+
       .hint-item {
         display: flex;
         align-items: center;
         gap: 5px;
       }
+
       .key-combo {
         display: flex;
         align-items: center;
         gap: 2px;
       }
+
       .key {
         display: inline-block;
         padding: 2px 6px;
@@ -249,13 +254,17 @@
           --terminal-height: 85vh;
         }
       }
+
       @media (max-width: 420px) {
         .key-hint {
           display: none;
         }
       }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -273,7 +282,11 @@
 
         <template x-for="(entry, index) in currentEntries" :key="index">
           <div>
-            <div class="entry" :class="{ 'focused': currentFocus === index }" @click="handleClick(index)">
+            <div
+              class="entry"
+              :class="{ 'focused': currentFocus === index }"
+              @click="handleClick(index)"
+            >
               <div class="entry-icon" x-text="entry.icon || '📄'"></div>
               <div class="entry-name" x-text="entry.name"></div>
             </div>
@@ -316,13 +329,24 @@
                 <span x-text="dialogEntry.icon || '🔍'"></span>
                 <span x-text="dialogEntry.name"></span>
               </div>
-              <button class="dialog-close" @click="showDialog = false">✕</button>
+              <button class="dialog-close" @click="showDialog = false">
+                ✕
+              </button>
             </div>
 
             <div class="dialog-body">
               <div class="dialog-input-wrapper">
                 <div class="dialog-prompt">></div>
-                <input type="text" class="dialog-input" placeholder="Enter your search term..." x-model="searchTerm" @keydown.enter="performSearch" @keydown.esc="showDialog = false" x-ref="searchInput" autofocus />
+                <input
+                  type="text"
+                  class="dialog-input"
+                  placeholder="Enter your search term..."
+                  x-model="searchTerm"
+                  @keydown.enter="performSearch"
+                  @keydown.esc="showDialog = false"
+                  x-ref="searchInput"
+                  autofocus
+                />
               </div>
             </div>
 
@@ -338,131 +362,6 @@
     <script>
       document.addEventListener("alpine:init", () => {
         Alpine.data("startpage", () => ({
-          files: [
-            { name: "126网易免费邮", icon: "✉️", href: "https://mail.126.com/" },
-            { name: "adonisjs.com", icon: "🛠️", href: "https://docs.adonisjs.com/" },
-            {
-              name: "alamy",
-              icon: "🖼️",
-              href: "https://www.alamy.com",
-              search: "https://www.alamy.com/stock-photo/{}.html?sortBy=newest",
-              dialog: true
-            },
-            {
-              name: "Alpine.js",
-              icon: "⛰️",
-              href: "https://alpinejs.dev/"
-            },
-            {
-              name: "archlinux.org",
-              icon: "🐧",
-              href: "https://archlinux.org/packages/",
-              search: "https://archlinux.org/packages/?q={}",
-              dialog: true
-            },
-            { name: "astro.build", icon: "🪐", href: "https://docs.astro.build/en/getting-started/" },
-            {
-              name: "百度",
-              shortcut: "b",
-              icon: "🔍",
-              href: "https://www.baidu.com/",
-              content: [
-                {
-                  name: "网页",
-                  shortcut: "w",
-                  icon: "🌐",
-                  dialog: true,
-                  search: "https://www.baidu.com/s?wd={}"
-                },
-                {
-                  name: "地图",
-                  shortcut: "d",
-                  icon: "🗺️",
-                  dialog: true,
-                  search: "https://map.baidu.com/search/@12610000,2630000?querytype=s&wd={}"
-                }
-              ]
-            },
-            { name: "deepseek.com", icon: "🧠", href: "https://chat.deepseek.com/" },
-            { name: "dev.to", icon: "💻", href: "https://dev.to/" },
-            {
-              name: "gitee",
-              icon: "👍",
-              href: "https://gitee.com/",
-              content: [
-                { name: "dashboard", icon: "📊", href: "https://gitee.com/dashboard" },
-                { name: "repositories", icon: "📁", href: "https://gitee.com/dashboard/projects" },
-                {
-                  name: "search repositories",
-                  icon: "🔍",
-                  dialog: true,
-                  search: "https://so.gitee.com/?q={}"
-                }
-              ]
-            },
-            {
-              name: "github.com",
-              icon: "🐙",
-              href: "https://github.com/",
-              content: [
-                { name: "dashboard", icon: "📊", href: "https://github.com/dashboard" },
-                { name: "repositories", icon: "📁", href: "https://github.com/chenxing-dev?tab=repositories" },
-                { name: "stars", icon: "⭐", href: "https://github.com/chenxing-dev?tab=stars" },
-                {
-                  name: "search code",
-                  icon: "🔎",
-                  dialog: true,
-                  search: "https://github.com/search?type=code&q={}"
-                },
-                {
-                  name: "search repositories",
-                  icon: "🔍",
-                  dialog: true,
-                  search: "https://github.com/search?type=repository&q={}"
-                }
-              ]
-            },
-            {
-              name: "广州市人民政府",
-              shortcut: "g",
-              icon: "🏛️",
-              href: "https://www.gz.gov.cn/"
-            },
-            { name: "makefrontendshitagain", icon: "💩", href: "https://makefrontendshitagain.party/" },
-            { name: "nerdfonts.com", icon: "🔤", href: "https://www.nerdfonts.com/cheat-sheet" },
-            {
-              name: "npmjs.com",
-              icon: "📦",
-              href: "https://www.npmjs.com/",
-              search: "https://www.npmjs.com/search?q={}",
-              dialog: true
-            },
-            {
-              name: "searxng",
-              icon: "🔎",
-              href: "https://searx.foobar.vip/",
-              search: "https://searx.foobar.vip/search?language=all&q={}",
-              dialog: true
-            },
-            { name: "shadcn/ui", icon: "💅", href: "https://ui.shadcn.com/docs/components/" },
-            { name: "tailwindcss", icon: "🌀", href: "https://tailwindcss.com/docs/" },
-            {
-              name: "天眼查",
-              shortcut: "t",
-              icon: "👁️",
-              href: "https://www.tianyancha.com/",
-              search: "https://www.tianyancha.com/search?key={}",
-              dialog: true
-            },
-            { name: "vue.js", icon: "🟢", href: "https://vuejs.org/guide/introduction.html" },
-            {
-              name: "微信文件传输助手",
-              shortcut: "w",
-              icon: "📤",
-              href: "https://filehelper.weixin.qq.com/"
-            }
-          ],
-
           // Current state
           currentEntries: [],
           path: "~",
@@ -476,9 +375,23 @@
           currentMatchIndex: -1,
 
           init() {
-            this.currentEntries = this.files;
+            this.loadBookmarks();
             // Focus the terminal on load
             this.$el.focus();
+          },
+
+          async loadBookmarks() {
+            try {
+              const res = await fetch("./bookmarks.json", {
+                cache: "no-store",
+              });
+              if (!res.ok) return;
+              const data = await res.json();
+              if (!Array.isArray(data)) return;
+              this.currentEntries = data;
+            } catch {
+              // Ignore and keep the inline data.
+            }
           },
 
           handleKey(event) {
@@ -522,16 +435,19 @@
           },
 
           moveFocus(direction) {
-            this.currentFocus = (this.currentFocus + direction + this.currentEntries.length) % this.currentEntries.length;
+            this.currentFocus =
+              (this.currentFocus + direction + this.currentEntries.length) %
+              this.currentEntries.length;
 
             // Scroll focused element into view
             this.$nextTick(() => {
-              const focusedElement = this.$refs.terminalBody.querySelector(".entry.focused");
+              const focusedElement =
+                this.$refs.terminalBody.querySelector(".entry.focused");
               if (focusedElement) {
                 focusedElement.scrollIntoView({
                   behavior: "smooth",
                   block: "nearest",
-                  inline: "nearest"
+                  inline: "nearest",
                 });
               }
             });
@@ -573,7 +489,7 @@
               this.stack.push({
                 entries: this.currentEntries,
                 focus: this.currentFocus,
-                path: this.path
+                path: this.path,
               });
 
               // Navigate to sub-content
@@ -635,7 +551,10 @@
                   this.jumpMatches.push(i);
                 }
                 // Otherwise match by first letter of name
-                else if (!entry.shortcut && entry.name.charAt(0).toLowerCase() === letter) {
+                else if (
+                  !entry.shortcut &&
+                  entry.name.charAt(0).toLowerCase() === letter
+                ) {
                   this.jumpMatches.push(i);
                 }
               }
@@ -648,19 +567,21 @@
             // If we have matches, move to next one
             if (this.jumpMatches.length > 0) {
               // Increment the match index
-              this.currentMatchIndex = (this.currentMatchIndex + 1) % this.jumpMatches.length;
+              this.currentMatchIndex =
+                (this.currentMatchIndex + 1) % this.jumpMatches.length;
 
               // Set the new focus
               this.currentFocus = this.jumpMatches[this.currentMatchIndex];
 
               // Scroll to the focused element
               this.$nextTick(() => {
-                const focusedElement = this.$refs.terminalBody.querySelector(".entry.focused");
+                const focusedElement =
+                  this.$refs.terminalBody.querySelector(".entry.focused");
                 if (focusedElement) {
                   focusedElement.scrollIntoView({
                     behavior: "smooth",
                     block: "nearest",
-                    inline: "nearest"
+                    inline: "nearest",
                   });
                 }
               });
@@ -668,17 +589,23 @@
           },
 
           performSearch() {
-            if (this.dialogEntry && this.dialogEntry.search && this.searchTerm.trim()) {
+            if (
+              this.dialogEntry &&
+              this.dialogEntry.search &&
+              this.searchTerm.trim()
+            ) {
               const term = encodeURIComponent(this.searchTerm.trim());
 
               // Handle placeholder {} in search URLs
-              const url = this.dialogEntry.search.includes("{}") ? this.dialogEntry.search.replace("{}", term) : this.dialogEntry.search + term;
+              const url = this.dialogEntry.search.includes("{}")
+                ? this.dialogEntry.search.replace("{}", term)
+                : this.dialogEntry.search + term;
               const ctrlPressed = event.ctrlKey;
               this.openLink(url, ctrlPressed);
             }
             this.showDialog = false;
             this.searchTerm = "";
-          }
+          },
         }));
       });
     </script>
