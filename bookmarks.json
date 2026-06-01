@@ -78,6 +78,7 @@
   },
   {
     "name": "豆包",
+    "shortcut": "d",
     "icon": "🫘",
     "href": "https://www.doubao.com/chat"
   },
