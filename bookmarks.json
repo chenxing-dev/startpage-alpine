@@ -1,12 +1,4 @@
 [
-  { "name": "126网易免费邮", "icon": "✉️", "href": "https://mail.126.com/" },
-  {
-    "name": "alamy",
-    "icon": "🖼️",
-    "href": "https://www.alamy.com",
-    "search": "https://www.alamy.com/stock-photo/{}.html?sortBy=newest",
-    "dialog": true
-  },
   {
     "name": "Alpine.js",
     "icon": "⛰️",
