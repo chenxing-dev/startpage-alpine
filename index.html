@@ -285,7 +285,7 @@
             <div
               class="entry"
               :class="{ 'focused': currentFocus === index }"
-              @click="handleClick(index)"
+              @click="handleClick($event, index)"
             >
               <div class="entry-icon" x-text="entry.icon || '📄'"></div>
               <div class="entry-name" x-text="entry.name"></div>
@@ -342,7 +342,7 @@
                   class="dialog-input"
                   placeholder="Enter your search term..."
                   x-model="searchTerm"
-                  @keydown.enter="performSearch"
+                  @keydown.enter="performSearch($event)"
                   @keydown.esc="showDialog = false"
                   x-ref="searchInput"
                   autofocus
@@ -456,7 +456,7 @@
             this.updateCurrentMatchIndex();
           },
 
-          handleClick(index) {
+          handleClick(event, index) {
             // Set focus to the clicked item
             this.currentFocus = index;
 
@@ -588,7 +588,7 @@
             }
           },
 
-          performSearch() {
+          performSearch(event) {
             if (
               this.dialogEntry &&
               this.dialogEntry.search &&
