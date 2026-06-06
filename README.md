@@ -12,7 +12,7 @@ A minimalistic browser startpage with terminal-style interface, featuring keyboa
   - Letter keys to jump to entries
   - Escape to go back
 - **Single File Implementation**: Just one HTML file with no build dependencies
-- **Customizable Bookmarks**: Easily edit the JavaScript array to add/remove entries
+- **Customizable Bookmarks**: Easily edit the `bookmarks.json` file to add/remove entries
 - **Responsive Design**: Works on all screen sizes
 
 ## Installation
@@ -29,17 +29,17 @@ c.url.start_pages = ["/path/to/startpage-alpine/index.html"]
 ```
 
 ## Customization
-Edit the `files` array in the HTML file to customize your bookmarks:
-```javascript
-files = [
+Bookmarks are loaded from the `bookmarks.json` file. Edit `bookmarks.json` to add, remove, or modify entries. Each entry should be an object with `name`, `icon`, and `href` fields, for example:
+```json
+[
   {
-    name: "Example Site",
-    icon: "⭐",
-    href: "https://example.com"
-  },
-  // ... other entries
-];
+    "name": "Example Site",
+    "icon": "⭐",
+    "href": "https://example.com"
+  }
+]
 ```
+After editing, reload the page to see the changes.
 
 ## Why Alpine.js?
 This version uses Alpine.js instead of Svelte/Astro from the [original startpage](https://github.com/chenxing-dev/startpage) for:
